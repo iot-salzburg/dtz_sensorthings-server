@@ -10,9 +10,6 @@ services:
             POSTGRES_PASSWORD: postgres
     gost:
         image: geodan/gost
-        environment:
-            gost_db_host: gost-db
-            gost_mqtt_host: mosquitto
     dashboard:
         image: geodan/gost-dashboard
         ports:
