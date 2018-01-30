@@ -33,6 +33,7 @@ services:
             - gost-db
         environment:
             GOST_DB_HOST: gost-db
+            GOST_SERVER_EXTERNAL_URI: http://${HOSTNAME}:8082
             # GOST_MQTT_HOST: mosquitto
     dashboard:
         image: geodan/gost-dashboard

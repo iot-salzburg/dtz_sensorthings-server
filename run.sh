@@ -1,5 +1,6 @@
 #!/bin/bash
 
 if [[ "$1" = "start" ]]; then
-	docker-compose --project-name i-maintenance up
+	export HOSTNAME=`hostname`
+	docker-compose --project-name sensorthingsserver up --build -d --force-recreate
 fi
