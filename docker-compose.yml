@@ -15,7 +15,7 @@ services:
     #         - "1883:1883"
     #         - "9001:9001"
     gost-db:
-        image: geodan/gost-db
+        image: geodan/gost-db:0.5
         restart: always
         volumes:
             - postgis:/var/lib/postgresql/data
@@ -24,7 +24,7 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
     gost:
-        image: geodan/gost
+        image: geodan/gost:0.5
         restart: always
         volumes:
             - gost_conf:/gostserver/config
@@ -37,7 +37,7 @@ services:
             GOST_SERVER_MAX_ENTITIES: 200
             # GOST_MQTT_HOST: mosquitto
     dashboard:
-        image: geodan/gost-dashboard
+        image: geodan/gost-dashboard:0.5
         restart: always
         ports:
             - "8082:8080"
