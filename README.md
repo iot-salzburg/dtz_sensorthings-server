@@ -11,6 +11,10 @@ Central management server utilising the SensorThings API standard.
 docker-compose up --build
 ```
 
+Check if the following page is available: (status_code=20X)
+http://192.168.48.71:8082/v1.0/Datastreams
+
+
 ### Deployment:
 
 ```bash
