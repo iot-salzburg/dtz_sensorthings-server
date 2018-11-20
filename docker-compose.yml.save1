@@ -16,7 +16,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.hostname==il071
+                    - node.labels.node==71
             resources:
                 limits:
                     cpus: "1"
@@ -41,7 +41,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.hostname==il071
+                    - node.labels.node==71
             resources:
                 limits:
                     cpus: "1"
@@ -64,7 +64,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.hostname==il071
+                    - node.labels.node==71
             resources:
                 limits:
                     cpus: "1"
