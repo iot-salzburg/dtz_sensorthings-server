@@ -1,51 +1,83 @@
-version: '2'
+version: '3.4'
+
 services:
-    # node-red:
-    #     image: nodered/node-red-docker
-    #     volumes:
-    #         - nodered:/data
-    #     ports:
-    #         - "1880:1880"
-    # mosquitto:
-    #     image: toke/mosquitto
-    #     volumes:
-    #         - mosquitto_data:/mqtt/data
-    #         - mosquitto_conf:/mqtt/config:ro
-    #     ports:
-    #         - "1883:1883"
-    #         - "9001:9001"
     gost-db:
-        image: geodan/gost-db:0.5
-        restart: always
+#        image: geodan/gost-db
+        image: 127.0.0.1:5001/gost-db
+#        build: ./gostdb-local/
         volumes:
             - postgis:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: gost
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
+        networks:
+            - gost-network
+        deploy:
+            placement:
+                constraints:
+                    - node.labels.node==71
+            resources:
+                limits:
+                    cpus: "1"
+                    memory: 4G
+            replicas: 1
+            update_config:
+                parallelism: 2
+                delay: 10s
+            restart_policy:
+                condition: on-failure
+
     gost:
-        image: geodan/gost:0.5
-        restart: always
-        volumes:
-            - gost_conf:/gostserver/config
+        image: geodan/gost
         depends_on:
-            # - mosquitto
             - gost-db
         environment:
             GOST_DB_HOST: gost-db
-            GOST_SERVER_EXTERNAL_URI: http://${HOSTNAME}:8082
+            GOST_SERVER_EXTERNAL_URI: http://192.168.48.71:8082
             GOST_SERVER_MAX_ENTITIES: 200
-            # GOST_MQTT_HOST: mosquitto
+        networks:
+            - gost-network
+        deploy:
+            placement:
+                constraints:
+                    - node.labels.node==71
+            resources:
+                limits:
+                    cpus: "1"
+                    memory: 4G
+            replicas: 1
+            update_config:
+                parallelism: 2
+                delay: 10s
+            restart_policy:
+                condition: on-failure
+
     dashboard:
-        image: geodan/gost-dashboard:0.5
-        restart: always
+        image: geodan/gost-dashboard
         ports:
-            - "8082:8080"
+          - "8082:8080"
         depends_on:
             - gost
+        networks:
+            - gost-network
+        deploy:
+            placement:
+                constraints:
+                    - node.labels.node==71
+            resources:
+                limits:
+                    cpus: "1"
+                    memory: 4G
+            replicas: 1
+            update_config:
+                parallelism: 2
+                delay: 10s
+            restart_policy:
+                condition: on-failure
+
 volumes:
     postgis: {}
-    nodered: {}
-    gost_conf: {}
-    mosquitto_data: {}
-    mosquitto_conf: {}
+
+networks:
+    gost-network:
