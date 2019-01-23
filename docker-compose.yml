@@ -3,8 +3,8 @@ version: '3.4'
 services:
     gost-db:
 #        image: geodan/gost-db
-        image: 127.0.0.1:5001/gost-db
-#        build: ./gostdb-local/
+        image: 127.0.0.1:5001/gostdb-local
+        build: ./gostdb-local/
         volumes:
             - postgis:/var/lib/postgresql/data
         environment:
@@ -29,6 +29,8 @@ services:
                 condition: on-failure
 
     gost:
+        # environment variables not working in 0.5
+        # image: geodan/gost:0.5
         image: geodan/gost
         depends_on:
             - gost-db
@@ -36,6 +38,7 @@ services:
             GOST_DB_HOST: gost-db
             GOST_SERVER_EXTERNAL_URI: http://192.168.48.71:8082
             GOST_SERVER_MAX_ENTITIES: 200
+            GOST_MQTT_ENABLED: "false"
         networks:
             - gost-network
         deploy:
