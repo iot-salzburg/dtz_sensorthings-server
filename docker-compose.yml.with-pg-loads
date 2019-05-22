@@ -3,10 +3,11 @@ version: '3.4'
 services:
     gost-db:
 #        image: geodan/gost-db:0.5
-        image: 127.0.0.1:5001/gostdb-local
+        image: 127.0.0.1:5001/gost-db
         build: ./gostdb-local/
         volumes:
-            - /mnt/glusterfs/dtz/gost/postgresql/data:/var/lib/postgresql/data
+#            - ./gostdb-local:/gostdb-local
+            - postgis:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: gost
             POSTGRES_USER: postgres
@@ -16,7 +17,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.role==worker
+                    - node.hostname==il071
             resources:
                 limits:
                     cpus: "1"
@@ -29,8 +30,6 @@ services:
                 condition: on-failure
 
     gost:
-        # environment variables not working in 0.5
-        # image: geodan/gost:0.5
         image: geodan/gost
         depends_on:
             - gost-db
@@ -38,13 +37,12 @@ services:
             GOST_DB_HOST: gost-db
             GOST_SERVER_EXTERNAL_URI: http://192.168.48.71:8082
             GOST_SERVER_MAX_ENTITIES: 200
-            GOST_MQTT_ENABLED: "false"
         networks:
             - gost-network
         deploy:
             placement:
                 constraints:
-                    - node.role==worker
+                    - node.hostname==il071
             resources:
                 limits:
                     cpus: "1"
@@ -67,7 +65,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.role==worker
+                    - node.hostname==il071
             resources:
                 limits:
                     cpus: "1"
@@ -78,6 +76,9 @@ services:
                 delay: 10s
             restart_policy:
                 condition: on-failure
+
+volumes:
+    postgis: {}
 
 networks:
     gost-network:

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-docker-compose build
-docker-compose push || true
+#docker-compose build
+#docker-compose push  || true
 docker stack deploy --compose-file docker-compose.yml gost
 
 # NB: gost-db volume is kept persistent in swarm node, use following commands for backup & delete:
