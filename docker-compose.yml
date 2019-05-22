@@ -2,11 +2,10 @@ version: '3.4'
 
 services:
     gost-db:
-#        image: geodan/gost-db
         image: 127.0.0.1:5001/gostdb-local
         build: ./gostdb-local/
         volumes:
-            - postgis:/var/lib/postgresql/data
+            - /mnt/glusterfs/dtz/gost/postgresql/data:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: gost
             POSTGRES_USER: postgres
@@ -16,7 +15,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.hostname==il071
+                    - node.role==worker
             resources:
                 limits:
                     cpus: "1"
@@ -44,7 +43,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.hostname==il071
+                    - node.role==worker
             resources:
                 limits:
                     cpus: "1"
@@ -67,7 +66,7 @@ services:
         deploy:
             placement:
                 constraints:
-                    - node.hostname==il071
+                    - node.role==worker
             resources:
                 limits:
                     cpus: "1"
@@ -78,9 +77,6 @@ services:
                 delay: 10s
             restart_policy:
                 condition: on-failure
-
-volumes:
-    postgis: {}
 
 networks:
     gost-network:
